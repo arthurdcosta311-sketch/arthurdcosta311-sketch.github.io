@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#04070d" />
+<title>WebGL · PocketHost</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #04070d; }
+  canvas { display: block; width: 100%; height: 100%; }
+  .hud {
+    position: fixed; inset: 0;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+    pointer-events: none;
+    font: 500 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: #dbe6f2;
+  }
+  .panel {
+    pointer-events: auto; padding: 10px 13px; border-radius: 14px;
+    background: rgba(4,7,13,0.62); border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    white-space: pre-line;
+  }
+  .back {
+    margin-top: auto; pointer-events: auto; color: #9fb3c8;
+    text-decoration: none; border: 1px solid rgba(255,255,255,0.12);
+    padding: 9px 13px; border-radius: 12px; background: rgba(4,7,13,0.6);
+  }
+  .back:active { background: rgba(255,255,255,0.12); }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div class="home" style="display:none"></div>
+<div class="hud">
+  <div class="panel" id="stats">starting WebGL…</div>
+  <a class="back" href="/">‹ PocketHost</a>
+</div>
+<script>
+(function () {
+  var canvas = document.getElementById('canvas');
+  var stats = document.getElementById('stats');
+
+  var gl = canvas.getContext('webgl2', { antialias: true, alpha: false, powerPreference: 'high-performance' })
+    || canvas.getContext('webgl', { antialias: true, alpha: false });
+
+  if (!gl) {
+    stats.textContent = 'WebGL is not available in this browser.';
+    return;
+  }
+
+  var isGL2 = typeof WebGL2RenderingContext !== 'undefined' && gl instanceof WebGL2RenderingContext;
+
+  var vertexSource = [
+    'attribute vec2 aPos;',
+    'varying vec2 vUv;',
+    'void main() {',
+    '  vUv = aPos * 0.5 + 0.5;',
+    '  gl_Position = vec4(aPos, 0.0, 1.0);',
+    '}'
+  ].join('\n');
+
+  var fragmentSource = [
+    'precision highp float;',
+    'varying vec2 vUv;',
+    'uniform vec2 uResolution;',
+    'uniform float uTime;',
+    'void main() {',
+    '  vec2 p = vUv * 2.0 - 1.0;',
+    '  p.x *= uResolution.x / uResolution.y;',
+    '  float t = uTime * 0.55;',
+    '  vec2 q = p;',
+    '  float glow = 0.0;',
+    '  for (int i = 0; i < 5; i++) {',
+    '    float fi = float(i);',
+    '    q += vec2(sin(q.y * 1.4 + t + fi), cos(q.x * 1.2 - t * 0.85 + fi)) * 0.42;',
+    '    glow += 0.055 / max(0.045, length(fract(q * 0.5) - 0.5));',
+    '  }',
+    '  glow = clamp(glow * 0.32, 0.0, 1.0);',
+    '  vec3 deep = vec3(0.016, 0.035, 0.07);',
+    '  vec3 cyan = vec3(0.16, 0.82, 0.92);',
+    '  vec3 col = mix(deep, cyan, glow);',
+    '  col += vec3(0.96, 0.68, 0.22) * pow(glow, 7.0);',
+    '  float vignette = 1.0 - smoothstep(0.35, 1.4, length(p));',
+    '  col *= 0.55 + 0.45 * vignette;',
+    '  gl_FragColor = vec4(col, 1.0);',
+    '}'
+  ].join('\n');
+
+  function compile(type, source) {
+    var shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      throw new Error(gl.getShaderInfoLog(shader) || 'shader error');
+    }
+    return shader;
+  }
+
+  var program;
+  try {
+    program = gl.createProgram();
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, vertexSource));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragmentSource));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      throw new Error(gl.getProgramInfoLog(program) || 'link error');
+    }
+  } catch (error) {
+    stats.textContent = 'Shader failed:\n' + (error && error.message ? error.message : error);
+    return;
+  }
+
+  gl.useProgram(program);
+
+  var buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+  var aPos = gl.getAttribLocation(program, 'aPos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  var uResolution = gl.getUniformLocation(program, 'uResolution');
+  var uTime = gl.getUniformLocation(program, 'uTime');
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize() {
+    var width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
+    var height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(uResolution, canvas.width, canvas.height);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  var gpuName = 'unknown GPU';
+  var info = gl.getExtension('WEBGL_debug_renderer_info');
+  if (info) {
+    try { gpuName = gl.getParameter(info.UNMASKED_RENDERER_WEBGL); } catch (error) { }
+  }
+  var maxTexture = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+
+  var frames = 0;
+  var last = performance.now();
+  var started = performance.now();
+
+  function render(now) {
+    gl.uniform1f(uTime, (now - started) / 1000.0);
+    resize();
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    frames++;
+    if (now - last > 500) {
+      var fps = Math.round(frames * 1000 / (now - last));
+      frames = 0;
+      last = now;
+      stats.textContent =
+        (isGL2 ? 'WebGL 2.0' : 'WebGL 1.0') + '  ·  ' + fps + ' fps\n' +
+        'GPU: ' + gpuName + '\n' +
+        'canvas: ' + canvas.width + '×' + canvas.height + '  ·  max texture ' + maxTexture + 'px';
+    }
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>
