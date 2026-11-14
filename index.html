@@ -1,256 +1,189 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-bg="deep">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arthur Costa | Developer</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background: #090909;
-    color: #f5f5f5;
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-}
-
-header {
-    padding: 25px 8%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #222;
-}
-
-.logo {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-nav a {
-    color: #aaa;
-    text-decoration: none;
-    margin-left: 20px;
-    font-size: 14px;
-}
-
-nav a:hover {
-    color: white;
-}
-
-main {
-    max-width: 900px;
-    margin: auto;
-    padding: 60px 25px;
-}
-
-section {
-    background: #111;
-    border: 1px solid #252525;
-    border-radius: 14px;
-    padding: 35px;
-    margin-bottom: 25px;
-}
-
-h1 {
-    font-size: clamp(30px, 6vw, 48px);
-    margin-bottom: 15px;
-}
-
-h2 {
-    margin-bottom: 15px;
-}
-
-p {
-    color: #aaa;
-    margin-bottom: 15px;
-}
-
-.github-link {
-    color: #fff;
-    text-decoration: none;
-    border-bottom: 1px solid #888;
-}
-
-.github-link:hover {
-    color: #aaa;
-}
-
-button {
-    background: white;
-    color: black;
-    border: none;
-    padding: 12px 22px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: #bbb;
-    transform: translateY(-2px);
-}
-
-#test-result {
-    margin-top: 20px;
-    color: #aaa;
-}
-
-.video-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-footer {
-    text-align: center;
-    padding: 30px;
-    border-top: 1px solid #222;
-    color: #666;
-    font-size: 13px;
-}
-
-@media(max-width: 600px) {
-    header {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    nav a {
-        margin: 0 8px;
-    }
-
-    section {
-        padding: 25px;
-    }
-}
-</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ProjectBySketch — about me</title>
+<meta name="description" content="The about-me page of ProjectBySketch, built by arthurdcosta311-sketch." />
+<meta name="theme-color" content="#0b0614" />
+<link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
-<header>
-    <div class="logo">ARTHUR.DEV</div>
+<div class="bg" aria-hidden="true">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <div class="blob blob-c"></div>
+  <div class="stars" id="stars"></div>
+</div>
 
-    <nav>
-        <a href="#about">About</a>
-        <a href="#test">Test</a>
-        <a href="#more">More</a>
-    </nav>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">ProjectBySketch</span>
+  </a>
+  <div class="topbar-actions">
+    <button class="pill" id="musicToggle" type="button" aria-pressed="true">
+      <span class="pill-ico" id="musicIcon" aria-hidden="true">♫</span>
+      <span id="musicLabel">Music on</span>
+    </button>
+    <button class="pill" id="themeToggle" type="button" aria-expanded="false">
+      <span class="pill-ico" aria-hidden="true">🎨</span>
+      <span>Theme</span>
+    </button>
+  </div>
 </header>
 
-<main>
+<main id="top">
 
-    <!-- ABOUT DEVELOPER -->
-    <section id="about">
-        <h1>About the developer.</h1>
+  <section class="hero">
+    <p class="eyebrow">about me</p>
+    <h1>Hey — I'm <span class="grad">Arthur</span>.</h1>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://www.trytipping.com/arthurdcosta311sketch" target="_blank" rel="noopener noreferrer">
+        <span aria-hidden="true">☕</span> Tip the developer
+      </a>
+      <a class="btn btn-ghost" href="https://github.com/arthurdcosta311-sketch" target="_blank" rel="noopener noreferrer">
+        <span aria-hidden="true">🐙</span> My GitHub
+      </a>
+    </div>
+  </section>
 
-        <p>
-            <a class="github-link"
-               href="https://github.com/arthurdcosta311-sketch"
-               target="_blank"
-               rel="noopener noreferrer">
-               https://github.com/arthurdcosta311-sketch
-            </a>
-            is a developer. He develops. He wrote btw that's why it's shit.
-        </p>
+  <section class="desk-wrap">
+    <div class="desk-head">
+      <h2>My desktop</h2>
+    </div>
+    <div class="desk" id="desk">
+      <button class="icon" type="button" data-key="about" data-action="tab" data-tab="about">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">💜</span></span>
+        <span class="icon-label">About</span>
+      </button>
+      <button class="icon" type="button" data-key="experience" data-action="tab" data-tab="experience">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">💻</span></span>
+        <span class="icon-label">Experience</span>
+      </button>
+      <button class="icon" type="button" data-key="keeps" data-action="tab" data-tab="keeps">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">🧠</span></span>
+        <span class="icon-label">Keeps me going</span>
+      </button>
+      <button class="icon" type="button" data-key="notcoding" data-action="tab" data-tab="notcoding">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">😴</span></span>
+        <span class="icon-label">Not coding</span>
+      </button>
+      <button class="icon" type="button" data-key="github" data-action="link" data-href="https://github.com/arthurdcosta311-sketch">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">🐙</span></span>
+        <span class="icon-label">GitHub</span>
+      </button>
+      <button class="icon" type="button" data-key="tip" data-action="link" data-href="https://www.trytipping.com/arthurdcosta311sketch">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">☕</span></span>
+        <span class="icon-label">Tip me</span>
+      </button>
+      <button class="icon" type="button" data-key="theme" data-action="theme">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">🎨</span></span>
+        <span class="icon-label">Theme</span>
+      </button>
+      <button class="icon" type="button" data-key="music" data-action="music">
+        <span class="icon-bob"><span class="icon-inner" aria-hidden="true">🎵</span></span>
+        <span class="icon-label">Music</span>
+      </button>
+    </div>
+  </section>
 
-        <p>
-            Welcome to the official developer information page.
-            There isn't much else to say.
-        </p>
+  <nav class="tabs" id="tabs" aria-label="Pages">
+    <button class="tab is-active" type="button" data-tab="about" aria-selected="true">About me</button>
+    <button class="tab" type="button" data-tab="experience" aria-selected="false">My experience as a developer</button>
+    <button class="tab" type="button" data-tab="keeps" aria-selected="false">What keeps me going</button>
+    <button class="tab" type="button" data-tab="notcoding" aria-selected="false">When I'm not coding</button>
+  </nav>
 
-        <a href="https://github.com/arthurdcosta311-sketch"
-           target="_blank"
-           rel="noopener noreferrer">
-            <button>Visit GitHub Profile ↗</button>
-        </a>
-    </section>
+  <section class="panels" id="panels">
 
+    <article class="panel is-active" data-panel="about">
+      <h2 class="panel-title">About me</h2>
+      <p class="panel-text">I dont get sleep</p>
+      <ul class="facts">
+        <li><span class="fact-key">Name</span><span class="fact-val">Arthur</span></li>
+        <li><span class="fact-key">Handle</span><span class="fact-val">arthurdcosta311-sketch</span></li>
+        <li><span class="fact-key">Brand</span><span class="fact-val">ProjectBySketch™</span></li>
+        <li><span class="fact-key">Status</span><span class="fact-val">broke no money</span></li>
+      </ul>
+      <div class="panel-actions">
+        <a class="btn btn-primary" href="https://www.trytipping.com/arthurdcosta311sketch" target="_blank" rel="noopener noreferrer">☕ Tip the developer</a>
+        <a class="btn btn-ghost" href="https://github.com/arthurdcosta311-sketch" target="_blank" rel="noopener noreferrer">🐙 My GitHub</a>
+      </div>
+      <p class="panel-copyright">© ProjectBySketch™ &amp; arthurdcosta311-sketch</p>
+    </article>
 
-    <!-- WEBSITE TEST -->
-    <section id="test">
-        <h2>Website functionality test.</h2>
+    <article class="panel" data-panel="experience">
+      <h2 class="panel-title">My experience as a developer</h2>
+      <blockquote class="quote">
+        I don't really like codding really it's just it's pretty boring to sit there and do nothing
+        so I dicided to do something in life (ps: i really wanna quit)
+      </blockquote>
+      <p class="panel-copyright">© ProjectBySketch™ &amp; arthurdcosta311-sketch</p>
+    </article>
 
-        <p>
-            This section exists to check whether the website
-            and its JavaScript functionality are working.
-        </p>
+    <article class="panel" data-panel="keeps">
+      <h2 class="panel-title">What keeps me going</h2>
+      <blockquote class="quote">nottin I'm just bored</blockquote>
+      <p class="panel-copyright">© ProjectBySketch™ &amp; arthurdcosta311-sketch</p>
+    </article>
 
-        <button onclick="testWebsite()">
-            Run website test
-        </button>
+    <article class="panel" data-panel="notcoding">
+      <h2 class="panel-title">What does the developer do when they're not coding?</h2>
+      <div class="panel-actions">
+        <a class="btn btn-primary" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Take me there anyway</a>
+      </div>
+      <p class="panel-copyright">© ProjectBySketch™ &amp; arthurdcosta311-sketch</p>
+    </article>
 
-        <div id="test-result">
-            Waiting for test...
-        </div>
-    </section>
-
-
-    <!-- RICKROLL -->
-    <section id="more">
-        <h2>More about the developer.</h2>
-
-        <p>
-            Want to learn more about the developer?
-            Here's some additional information.
-        </p>
-
-        <div class="video-container">
-            <iframe
-                src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ"
-                title="More about the developer"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-            </iframe>
-        </div>
-    </section>
+  </section>
 
 </main>
 
-<footer>
-    © <span id="year"></span> Arthur Costa.
-    Built by the developer himself.
+<footer class="footer">
+  <p class="footer-line">© ProjectBySketch™ &amp; arthurdcosta311-sketch</p>
 </footer>
 
-<script>
-function testWebsite() {
-    const result = document.getElementById("test-result");
+<div class="sheet" id="themeSheet" aria-hidden="true">
+  <div class="sheet-backdrop" data-close></div>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <h2 id="sheetTitle">Make it yours</h2>
+      <button class="sheet-close" type="button" data-close aria-label="Close">✕</button>
+    </div>
 
-    result.innerHTML = "Running tests...";
+    <p class="sheet-label">Accent colour</p>
+    <div class="swatches" id="swatches"></div>
+    <label class="custom-colour">
+      <span>Custom colour</span>
+      <input type="color" id="customColor" value="#a855f7" />
+    </label>
 
-    setTimeout(() => {
-        result.innerHTML = `
-            <span style="color:#65db91">
-                ✓ JavaScript is working<br>
-                ✓ HTML is loaded<br>
-                ✓ CSS is loaded<br>
-                ✓ Website is operational
-            </span>
-            <br><br>
-            Congratulations. The website works.
-        `;
-    }, 500);
-}
+    <p class="sheet-label">Background</p>
+    <div class="bg-options" id="bgOptions">
+      <button class="bg-option" type="button" data-bg-choice="deep">Deep</button>
+      <button class="bg-option" type="button" data-bg-choice="velvet">Velvet</button>
+      <button class="bg-option" type="button" data-bg-choice="light">Daylight</button>
+    </div>
 
-document.getElementById("year").textContent =
-    new Date().getFullYear();
-</script>
+    <p class="sheet-label">Extras</p>
+    <label class="toggle-row">
+      <span>Floating stars</span>
+      <input type="checkbox" id="starsToggle" checked />
+    </label>
+    <label class="toggle-row">
+      <span>Icon bounce</span>
+      <input type="checkbox" id="bobToggle" checked />
+    </label>
 
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" type="button" id="resetTheme">Reset colours</button>
+      <button class="btn btn-ghost" type="button" id="resetIcons">Reset icon positions</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
